@@ -154,12 +154,12 @@ export default function SidebarResponsive() {
                           sx={{
                             padding: "8px",
                             borderRadius: "5px",
+                            color: "black",
                             backgroundColor: isChildActive
                               ? isDark
-                                ? "var(--mantine-color-gray-1)"
-                                : "var(--mantine-color-primary-5)"
-                              : "var(--mantine-color-gray-1)",
-                            color: "#333",
+                                ? "var(--mantine-color-primary-6)"
+                                : "var(--mantine-color-primary-2)"
+                              : "white",
                             display: "flex",
                             alignItems: "center",
                             gap: 4,

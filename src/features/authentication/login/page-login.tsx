@@ -2,7 +2,14 @@ import { ROUTES } from "@/enum/routes";
 import useMutateLogin from "@/features/authentication/login/hooks/useMutateLogin";
 import useUserStore from "@/store/user";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Box, Button, PasswordInput, Text, TextInput } from "@mantine/core";
+import {
+  Box,
+  Button,
+  PasswordInput,
+  Text,
+  TextInput,
+  useMantineColorScheme,
+} from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
@@ -16,6 +23,8 @@ const schema = z.object({
 
 export default function Login() {
   const router = useNavigate();
+
+  const isDark = useMantineColorScheme().colorScheme === "dark";
 
   const { setUser } = useUserStore();
 
@@ -116,7 +125,7 @@ export default function Login() {
         })}
       >
         <Box
-          bg={"orange.7"}
+          bg={isDark ? "dark.7" : "white"}
           sx={{
             width: "100%",
             maxWidth: 420,
@@ -125,7 +134,7 @@ export default function Login() {
             boxShadow: "0 2px 12px rgba(0,0,0,0.1)",
           }}
         >
-          <Text size="xl" mb="xs">
+          <Text size="xl" fw={700} mb="xs" c="primary.7">
             Login to {import.meta.env.VITE_PUBLIC_APP_NAME}
           </Text>
           <Text mb="xs">emilys | emilyspass</Text>
