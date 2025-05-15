@@ -9,7 +9,7 @@ const AuthenticationRoutes: RouteObject[] = [
     children: [
       {
         index: true, // default page for /
-        element: <Navigate to="/dashboard" replace />,
+        element: <Navigate to="/login" replace />,
       },
       {
         path: "login",
