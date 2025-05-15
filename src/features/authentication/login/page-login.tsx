@@ -93,7 +93,7 @@ export default function Login() {
         }}
       >
         <img
-          src="/image/background.jpg"
+          src="https://picsum.photos/1000/1000"
           style={{
             width: "100%",
             height: "100%",
@@ -108,7 +108,7 @@ export default function Login() {
       <Box
         sx={(theme) => ({
           flex: 1,
-          backgroundColor: theme.colors.green[7],
+          backgroundColor: theme.colors.gray[3],
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -116,10 +116,10 @@ export default function Login() {
         })}
       >
         <Box
+          bg={"orange.7"}
           sx={{
             width: "100%",
             maxWidth: 420,
-            backgroundColor: "white",
             padding: "2rem",
             borderRadius: "8px",
             boxShadow: "0 2px 12px rgba(0,0,0,0.1)",
