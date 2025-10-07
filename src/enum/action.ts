@@ -8,6 +8,11 @@ export const ACTION_LIST = {
       Delete: "remove-gate",
     },
   },
+  Report: {
+    Daily: {
+      View: "get-all-report-daily",
+    },
+  },
   Menu: {
     MenuChild: {
       View: "get-all-menu-child",

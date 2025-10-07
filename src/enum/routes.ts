@@ -7,6 +7,11 @@ export const ROUTES = {
       View: "/master-data/gate",
     },
   },
+  Report: {
+    Daily: {
+      View: "/report/daily",
+    },
+  },
   Menu: {
     ChildMenu: {
       View: "/menu/child-menu",
