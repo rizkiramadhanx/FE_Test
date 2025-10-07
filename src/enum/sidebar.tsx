@@ -1,6 +1,6 @@
 import { ROUTES } from "@/enum/routes";
 import { BiUser } from "react-icons/bi";
-import { FaCog, FaDatabase, FaFileAlt } from "react-icons/fa";
+import { FaDatabase, FaFileAlt } from "react-icons/fa";
 
 const SidebarMenu = [
   {
@@ -28,24 +28,6 @@ const SidebarMenu = [
         path: ROUTES.Report.Daily.View,
       },
     ],
-  },
-  {
-    title: "Menu",
-    icon: <FaCog />,
-    path: ROUTES.Menu.ChildMenu.View,
-    activePath: [ROUTES.Menu.ChildMenu.View],
-    children: [
-      {
-        title: "Child Menu",
-        icon: <FaCog />,
-        path: ROUTES.Menu.ChildMenu.View,
-      },
-    ],
-  },
-  {
-    title: "Other Menu",
-    icon: <FaCog />,
-    activePath: ["/master-data/role"],
   },
 ];
 

@@ -96,7 +96,7 @@ export default function Topbar() {
               w={{ base: 100, md: 150 }}
               variant="outline"
             >
-              {user?.firstName}
+              {user?.name}
             </Button>
           </Popover.Target>
           <Popover.Dropdown p={2}>

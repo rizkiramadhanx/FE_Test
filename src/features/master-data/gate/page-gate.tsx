@@ -188,7 +188,7 @@ export default function PageGate() {
               dataGate?.data?.data?.rows?.rows?.length > 0 &&
               dataGate.data.data.rows.rows.map(
                 (gate: typeDataGate, index: number) => (
-                  <Table.Tr key={gate.id}>
+                  <Table.Tr key={index}>
                     <Table.Td>
                       {(filter.page - 1) * filter.limit + index + 1}
                     </Table.Td>
@@ -267,9 +267,10 @@ export default function PageGate() {
               }));
             }}
             data={[
+              { label: "1", value: "1" },
+              { label: "5", value: "5" },
+              { label: "10", value: "10" },
               { label: "25", value: "25" },
-              { label: "50", value: "50" },
-              { label: "100", value: "100" },
             ]}
           />
         )}

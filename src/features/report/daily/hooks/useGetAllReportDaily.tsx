@@ -18,11 +18,8 @@ export default function useGetAllReportDaily({
         method: "GET",
         url: "/api/lalins",
         params: {
-          filter: {
-            limit: limit,
-            offset: offset,
-          },
-          keyword: keyword,
+          limit: limit,
+          page: page,
         },
       });
 

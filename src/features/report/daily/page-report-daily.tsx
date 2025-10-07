@@ -57,6 +57,48 @@ export default function PageReportDaily() {
     });
   };
 
+  // Function to get day name
+  const getDayName = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString("id-ID", {
+      weekday: "long",
+    });
+  };
+
+  // Function to get payment method clusters
+  const getPaymentMethodClusters = (report: typeDataReportDaily) => {
+    const clusters: string[] = [];
+
+    // Check KTP cluster
+    if (report.DinasKary > 0 || report.DinasMitra > 0 || report.DinasOpr > 0) {
+      clusters.push("KTP");
+    }
+
+    // Check E-Toll cluster
+    if (
+      report.eBca > 0 ||
+      report.eBni > 0 ||
+      report.eBri > 0 ||
+      report.eDKI > 0 ||
+      report.eMandiri > 0 ||
+      report.eMega > 0 ||
+      report.eNobu > 0
+    ) {
+      clusters.push("E-Toll");
+    }
+
+    // Check Flo cluster
+    if (report.eFlo > 0) {
+      clusters.push("Flo");
+    }
+
+    // Check Tunai cluster
+    if (report.Tunai > 0) {
+      clusters.push("Tunai");
+    }
+
+    return clusters.join(" + ");
+  };
+
   return (
     <Box px={20} py={10}>
       <Group mb="md">
@@ -98,18 +140,19 @@ export default function PageReportDaily() {
         <Table striped highlightOnHover>
           <Table.Thead>
             <Table.Tr>
-              <Table.Th>No</Table.Th>
-              <Table.Th>Tanggal</Table.Th>
-              <Table.Th>Shift</Table.Th>
+              <Table.Th>No.</Table.Th>
+              <Table.Th>Ruas</Table.Th>
+              <Table.Th>Gerbang</Table.Th>
               <Table.Th>Gardu</Table.Th>
-              <Table.Th>Golongan</Table.Th>
-              <Table.Th>Asal Gerbang</Table.Th>
-              <Table.Th>Tunai</Table.Th>
-              <Table.Th>e-Mandiri</Table.Th>
-              <Table.Th>e-BRI</Table.Th>
-              <Table.Th>e-BNI</Table.Th>
-              <Table.Th>e-BCA</Table.Th>
-              <Table.Th>Total</Table.Th>
+              <Table.Th>Hari</Table.Th>
+              <Table.Th>Tanggal</Table.Th>
+              <Table.Th>Metode Pembayaran</Table.Th>
+              <Table.Th>Gol I</Table.Th>
+              <Table.Th>Gol II</Table.Th>
+              <Table.Th>Gol III</Table.Th>
+              <Table.Th>Gol IV</Table.Th>
+              <Table.Th>Gol V</Table.Th>
+              <Table.Th>Total Lalin</Table.Th>
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>
@@ -133,16 +176,27 @@ export default function PageReportDaily() {
                       <Table.Td>
                         {(filter.page - 1) * filter.limit + index + 1}
                       </Table.Td>
+                      <Table.Td>Ruas {report.IdCabang}</Table.Td>
+                      <Table.Td>Gerbang {report.IdGerbang}</Table.Td>
+                      <Table.Td>Gardu {report.IdGardu}</Table.Td>
+                      <Table.Td>{getDayName(report.Tanggal)}</Table.Td>
                       <Table.Td>{formatDate(report.Tanggal)}</Table.Td>
-                      <Table.Td>{report.Shift}</Table.Td>
-                      <Table.Td>{report.IdGardu}</Table.Td>
-                      <Table.Td>{report.Golongan}</Table.Td>
-                      <Table.Td>{report.IdAsalGerbang}</Table.Td>
-                      <Table.Td>{formatNumber(report.Tunai)}</Table.Td>
-                      <Table.Td>{formatNumber(report.eMandiri)}</Table.Td>
-                      <Table.Td>{formatNumber(report.eBri)}</Table.Td>
-                      <Table.Td>{formatNumber(report.eBni)}</Table.Td>
-                      <Table.Td>{formatNumber(report.eBca)}</Table.Td>
+                      <Table.Td>{getPaymentMethodClusters(report)}</Table.Td>
+                      <Table.Td>
+                        {report.Golongan === 1 ? formatNumber(total) : 0}
+                      </Table.Td>
+                      <Table.Td>
+                        {report.Golongan === 2 ? formatNumber(total) : 0}
+                      </Table.Td>
+                      <Table.Td>
+                        {report.Golongan === 3 ? formatNumber(total) : 0}
+                      </Table.Td>
+                      <Table.Td>
+                        {report.Golongan === 4 ? formatNumber(total) : 0}
+                      </Table.Td>
+                      <Table.Td>
+                        {report.Golongan === 5 ? formatNumber(total) : 0}
+                      </Table.Td>
                       <Table.Td>
                         <Text fw={600}>{formatNumber(total)}</Text>
                       </Table.Td>
@@ -154,14 +208,14 @@ export default function PageReportDaily() {
               (!dataReport?.data?.data?.rows?.rows ||
                 dataReport.data.data.rows.rows.length === 0) && (
                 <Table.Tr>
-                  <Table.Td colSpan={12} align="center" height={50}>
+                  <Table.Td colSpan={13} align="center" height={50}>
                     Tidak ada data ditemukan
                   </Table.Td>
                 </Table.Tr>
               )}
             {isLoadingReport && (
               <Table.Tr>
-                <Table.Td colSpan={12} align="center" height={50}>
+                <Table.Td colSpan={13} align="center" height={50}>
                   Memuat...
                 </Table.Td>
               </Table.Tr>

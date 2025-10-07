@@ -18,10 +18,8 @@ export default function useGetAllGate({
         method: "GET",
         url: "/api/gerbangs",
         params: {
-          filter: {
-            limit: limit,
-            offset: offset,
-          },
+          limit: limit,
+          page: page,
           NamaGerbang: keyword,
         },
       });
