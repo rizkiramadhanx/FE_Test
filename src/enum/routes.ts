@@ -1,11 +1,10 @@
 export const ROUTES = {
   Authentication: {
     Login: "/login",
-    Register: "/register",
   },
   MasterData: {
-    User: {
-      View: "/master-data/user",
+    Gate: {
+      View: "/master-data/gate",
     },
   },
   Menu: {

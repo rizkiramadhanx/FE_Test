@@ -15,10 +15,6 @@ const AuthenticationRoutes: RouteObject[] = [
         path: "login",
         element: <Login />,
       },
-      {
-        path: "register",
-        element: <h2>Register</h2>,
-      },
     ],
   },
 ];

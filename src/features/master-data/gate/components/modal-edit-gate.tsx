@@ -1,31 +1,30 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Group, Modal, Stack, TextInput } from "@mantine/core";
+import {
+  Button,
+  Group,
+  Modal,
+  Stack,
+  TextInput,
+  NumberInput,
+} from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { MdOutlineClose } from "react-icons/md";
 import { z } from "zod";
-import useMutateEditUser from "@/features/master-data/user/hooks/useMutateEditUser";
+import useMutateEditGate from "@/features/master-data/gate/hooks/useMutateEditGate";
 import { useEffect } from "react";
 
 const schema = z.object({
-  firstName: z
+  IdCabang: z.number().min(1, { message: "ID Ruas harus diisi" }),
+  NamaGerbang: z
     .string()
-    .min(4, { message: "Nama minimal 4 karakter" })
-    .regex(/^[a-zA-Z0-9 ]+$/, {
-      message: "Hanya huruf dan angka yang diperbolehkan",
-    }),
-  lastName: z
-    .string()
-    .min(4, { message: "Nama minimal 4 karakter" })
-    .regex(/^[a-zA-Z0-9 ]+$/, {
-      message: "Hanya huruf dan angka yang diperbolehkan",
-    }),
-  username: z.string().min(6, { message: "Username minimal 6 karakter" }),
+    .min(3, { message: "Nama Gerbang minimal 3 karakter" }),
+  NamaCabang: z.string().min(3, { message: "Nama Ruas minimal 3 karakter" }),
 });
 
-export type EditUserSchema = z.infer<typeof schema>;
+export type EditGateSchema = z.infer<typeof schema>;
 
-export default function ModalEditUser({
+export default function ModalEditGate({
   open,
   onClose,
   onSuccess,
@@ -34,14 +33,15 @@ export default function ModalEditUser({
   open: boolean;
   onClose: () => void;
   onSuccess: () => void;
-  defaultValue: EditUserSchema & { id: string };
+  defaultValue: EditGateSchema & { id: number };
 }) {
   const {
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors, isValid },
-  } = useForm<EditUserSchema>({
+  } = useForm<EditGateSchema>({
     resolver: zodResolver(schema),
     mode: "onChange",
   });
@@ -50,14 +50,14 @@ export default function ModalEditUser({
     reset(defaultValue);
   }, [defaultValue]);
 
-  const { mutate } = useMutateEditUser();
+  const { mutate } = useMutateEditGate();
 
   const handleFormClose = () => {
     reset();
     onClose();
   };
 
-  const onSubmit = (dataForm: EditUserSchema) => {
+  const onSubmit = (dataForm: EditGateSchema) => {
     mutate(
       {
         ...dataForm,
@@ -66,8 +66,8 @@ export default function ModalEditUser({
       {
         onSuccess: () => {
           notifications.show({
-            title: "Success",
-            message: "Successfully edit user",
+            title: "Berhasil",
+            message: "Berhasil mengubah gerbang",
             color: "green",
           });
 
@@ -78,7 +78,7 @@ export default function ModalEditUser({
         onError: () => {
           notifications.show({
             title: "Error",
-            message: "Failed to edit user",
+            message: "Gagal mengubah gerbang",
             color: "red",
           });
         },
@@ -90,7 +90,7 @@ export default function ModalEditUser({
     <Modal
       opened={open}
       onClose={handleFormClose}
-      title="Edit User"
+      title="Ubah Gerbang"
       size="lg"
       centered
       withCloseButton
@@ -98,36 +98,42 @@ export default function ModalEditUser({
     >
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
         <Stack gap={10}>
-          <TextInput
-            label="First Name"
-            placeholder="Insert First Name"
-            size="sm"
-            error={errors.firstName?.message}
-            {...register("firstName")}
+          <Controller
+            name="IdCabang"
+            control={control}
+            render={({ field }) => (
+              <NumberInput
+                {...field}
+                label="ID Ruas"
+                placeholder="Masukkan ID Ruas"
+                size="sm"
+                error={errors.IdCabang?.message}
+                hideControls
+              />
+            )}
           />
           <TextInput
-            label="Last Name"
-            placeholder="Insert Last Name"
+            label="Nama Gerbang"
+            placeholder="Masukkan Nama Gerbang"
             size="sm"
-            error={errors.lastName?.message}
-            {...register("lastName")}
+            error={errors.NamaGerbang?.message}
+            {...register("NamaGerbang")}
           />
           <TextInput
-            label="Username"
-            placeholder="Insert Username"
+            label="Nama Ruas"
+            placeholder="Masukkan Nama Ruas"
             size="sm"
-            autoComplete="username"
-            error={errors.username?.message}
-            {...register("username")}
+            error={errors.NamaCabang?.message}
+            {...register("NamaCabang")}
           />
         </Stack>
 
         <Group justify="end" mt="lg">
           <Button variant="outline" color="gray" onClick={handleFormClose}>
-            Cancel
+            Batal
           </Button>
           <Button type="submit" color="primary" disabled={!isValid}>
-            Save
+            Simpan
           </Button>
         </Group>
       </form>

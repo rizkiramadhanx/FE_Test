@@ -1,7 +1,7 @@
 import { axiosInstanceAPI } from "@/libs/axios";
 import { useQuery } from "@tanstack/react-query";
 
-export default function useGetAllUser({
+export default function useGetAllGate({
   keyword,
   page = 1,
   limit = 20,
@@ -9,18 +9,20 @@ export default function useGetAllUser({
   keyword?: string;
   page?: number;
   limit?: number;
-  status?: string;
 }) {
+  const offset = (page - 1) * limit;
   return useQuery({
-    queryKey: ["user", keyword, page, limit],
+    queryKey: ["gate", keyword, page, limit],
     queryFn: async () => {
       const response = await axiosInstanceAPI.request({
         method: "GET",
-        url: "/users",
+        url: "/api/gerbangs",
         params: {
-          limit: limit,
-          keyword,
-          skip: limit * page,
+          filter: {
+            limit: limit,
+            offset: offset,
+          },
+          NamaGerbang: keyword,
         },
       });
 

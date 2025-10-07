@@ -57,7 +57,7 @@ export default function Login() {
           color: "green",
         });
 
-        router(ROUTES.MasterData.User.View, { replace: true });
+        router(ROUTES.MasterData.Gate.View, { replace: true });
       },
       onError: () => {
         Notifications.show({

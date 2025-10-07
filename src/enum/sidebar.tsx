@@ -6,13 +6,13 @@ const SidebarMenu = [
   {
     title: "Master Data",
     icon: <FaDatabase />,
-    path: ROUTES.MasterData.User.View,
-    activePath: [ROUTES.MasterData.User.View],
+    path: ROUTES.MasterData.Gate.View,
+    activePath: [ROUTES.MasterData.Gate.View],
     children: [
       {
         title: "Gerbang",
         icon: <BiUser />,
-        path: ROUTES.MasterData.User.View,
+        path: ROUTES.MasterData.Gate.View,
       },
     ],
   },

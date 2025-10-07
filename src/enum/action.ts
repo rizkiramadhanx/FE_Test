@@ -1,11 +1,11 @@
 export const ACTION_LIST = {
   MasterData: {
-    User: {
-      View: "get-all-user",
-      ViewDetail: "get-one-user",
-      Add: "create-user",
-      Update: "update-user",
-      Delete: "remove-user",
+    Gate: {
+      View: "get-all-gate",
+      ViewDetail: "get-one-gate",
+      Add: "create-gate",
+      Update: "update-gate",
+      Delete: "remove-gate",
     },
   },
   Menu: {

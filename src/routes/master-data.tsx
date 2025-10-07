@@ -1,6 +1,6 @@
 import DashboardLayout from "@/components/layout/dashboard-layout";
 import ProtectedLayout from "@/components/layout/protected-layout";
-import PageUser from "@/features/master-data/user/page-user";
+import PageGate from "@/features/master-data/gate/page-gate";
 
 import { RouteObject } from "react-router";
 
@@ -18,8 +18,8 @@ const MasterDataRoutes: RouteObject[] = [
         element: <h2>Master Data</h2>,
       },
       {
-        path: "user",
-        element: <PageUser />,
+        path: "gate",
+        element: <PageGate />,
       },
     ],
   },
