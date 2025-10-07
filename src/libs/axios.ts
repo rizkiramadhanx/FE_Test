@@ -3,7 +3,7 @@ import store from "store2";
 
 // Auth
 const axiosInstanceAPI = axios.create({
-  baseURL: import.meta.env.VITE_PUBLIC_BACKEND_AUTH_URL,
+  baseURL: import.meta.env.VITE_PUBLIC_BACKEND,
 });
 
 axiosInstanceAPI.interceptors.request.use((config) => {

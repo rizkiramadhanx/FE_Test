@@ -5,15 +5,24 @@ export type typeDataLogin = {
   username: string;
   password: string;
 };
+
+export type typeDataLoginResponse = {
+  status: boolean;
+  message: string;
+  code: number;
+  is_logged_in: number;
+  token: string;
+};
+
 export default function useMutateLogin() {
-  return useMutation({
+  return useMutation<typeDataLoginResponse, Error, typeDataLogin>({
     mutationFn: async (dataForm: typeDataLogin) => {
-      const response = await axiosInstanceAPI.request({
+      const response = await axiosInstanceAPI.request<typeDataLoginResponse>({
         method: "POST",
-        url: "/user/login",
+        url: "/api/auth/login",
         data: dataForm,
       });
-      return response;
+      return response.data;
     },
   });
 }

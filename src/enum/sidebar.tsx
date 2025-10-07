@@ -1,4 +1,3 @@
-import { ACTION_LIST } from "@/enum/action";
 import { ROUTES } from "@/enum/routes";
 import { BiUser } from "react-icons/bi";
 import { FaCog, FaDatabase } from "react-icons/fa";
@@ -11,16 +10,9 @@ const SidebarMenu = [
     activePath: [ROUTES.MasterData.User.View],
     children: [
       {
-        title: "User",
+        title: "Gerbang",
         icon: <BiUser />,
         path: ROUTES.MasterData.User.View,
-        action: [ACTION_LIST.MasterData.User.View],
-      },
-      {
-        title: "Child Menu",
-        icon: <BiUser />,
-        path: ROUTES.Menu.ChildMenu.View,
-        action: [ACTION_LIST.MasterData.User.View],
       },
     ],
   },
@@ -34,7 +26,6 @@ const SidebarMenu = [
         title: "Child Menu",
         icon: <FaCog />,
         path: ROUTES.Menu.ChildMenu.View,
-        action: [ACTION_LIST.Menu.MenuChild.View],
       },
     ],
   },
