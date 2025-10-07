@@ -1,6 +1,7 @@
 import useGetAllReportDaily from "@/features/report/daily/hooks/useGetAllReportDaily";
 import { typeDataReportDaily } from "@/features/report/daily/type";
 import { useDebounceCallback } from "@/hooks/useDebounceCallback";
+import day from "@/libs/dayjs";
 import {
   Box,
   Button,
@@ -22,6 +23,11 @@ export default function PageReportDaily() {
 
   const [inputSearch, setInputSearch] = useState("");
 
+  const { data: AllDataCount } = useGetAllReportDaily({
+    limit: 999999,
+    page: 1,
+  });
+
   const [filter, setFilter] = useState({
     keyword: "",
     page: 1,
@@ -31,7 +37,6 @@ export default function PageReportDaily() {
   const {
     data: dataReport,
     isLoading: isLoadingReport,
-    refetch,
     isSuccess: isSuccessReport,
   } = useGetAllReportDaily(filter);
 
@@ -50,18 +55,12 @@ export default function PageReportDaily() {
 
   // Function to format date
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("id-ID", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
+    return day(dateString).format("DD MMMM YYYY");
   };
 
   // Function to get day name
   const getDayName = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("id-ID", {
-      weekday: "long",
-    });
+    return day(dateString).format("dddd");
   };
 
   // Function to get payment method clusters
