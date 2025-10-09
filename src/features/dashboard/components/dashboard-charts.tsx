@@ -5,8 +5,9 @@ import {
   typeRuasData,
   typeShiftData,
 } from "@/features/dashboard/type";
+import useGetAllGate from "@/features/master-data/gate/hooks/useGetAllGate";
 import { BarChart, DonutChart } from "@mantine/charts";
-import { Card, Grid, Group, Paper, Text, Title } from "@mantine/core";
+import { Card, Flex, Grid, Group, Paper, Text, Title } from "@mantine/core";
 import { useMemo } from "react";
 
 interface DashboardChartsProps {
@@ -14,6 +15,11 @@ interface DashboardChartsProps {
 }
 
 export default function DashboardCharts({ data }: DashboardChartsProps) {
+  const { data: gerbangData } = useGetAllGate({
+    keyword: "",
+    page: 1,
+    limit: 999999,
+  });
   // Process data for Bank Traffic Bar Chart
   const bankTrafficData: typeBankTraffic[] = useMemo(() => {
     const bankTotals: { [key: string]: number } = {
@@ -92,7 +98,11 @@ export default function DashboardCharts({ data }: DashboardChartsProps) {
     return Object.entries(gateTotals)
       .sort((a, b) => Number(a[0]) - Number(b[0]))
       .map(([gerbang, value]) => ({
-        name: `Gerbang ${gerbang}`,
+        name: `Gerbang ${
+          gerbangData?.data?.data?.rows?.rows?.find(
+            (item: any) => item.id === gerbang
+          )?.NamaGerbang
+        }`,
         value,
       }));
   }, [data]);
@@ -138,9 +148,21 @@ export default function DashboardCharts({ data }: DashboardChartsProps) {
           </Title>
           <BarChart
             h={300}
+            withTooltip
+            tooltipAnimationDuration={400}
+            tooltipProps={{
+              formatter: (value) => {
+                return <Text>jumlah : {value}</Text>;
+              },
+            }}
             data={bankTrafficData}
             dataKey="name"
-            series={[{ name: "value", color: "gray.6" }]}
+            series={[
+              {
+                name: "value",
+                color: "primary.6",
+              },
+            ]}
             tickLine="xy"
             gridAxis="xy"
           />
@@ -152,12 +174,24 @@ export default function DashboardCharts({ data }: DashboardChartsProps) {
           <Title order={3} mb="md">
             Total Lalin
           </Title>
-          <DonutChart
-            h={300}
-            data={shiftData}
-            withTooltip
-            tooltipDataSource="segment"
-          />
+          <Flex justify="center" w="100%" gap={100} align={"center"}>
+            <DonutChart
+              h={300}
+              data={shiftData}
+              withTooltip
+              tooltipDataSource="segment"
+            />
+            <Flex direction="column" gap={10}>
+              <Text ta="center">Total Lalin</Text>
+              <Flex direction="column" gap={10}>
+                {shiftData.map((item) => (
+                  <Text key={item.name}>
+                    {item.name}: {item.value}
+                  </Text>
+                ))}
+              </Flex>
+            </Flex>
+          </Flex>
         </Card>
       </Grid.Col>
 
@@ -171,7 +205,8 @@ export default function DashboardCharts({ data }: DashboardChartsProps) {
             h={300}
             data={gateTrafficData}
             dataKey="name"
-            series={[{ name: "value", color: "gray.6" }]}
+            series={[{ name: "value", color: "primary.6" }]}
+            color="primary.6"
             tickLine="xy"
             gridAxis="xy"
           />
@@ -183,12 +218,20 @@ export default function DashboardCharts({ data }: DashboardChartsProps) {
           <Title order={3} mb="md">
             Total Lalin
           </Title>
-          <DonutChart
-            h={300}
-            data={ruasData}
-            withTooltip
-            tooltipDataSource="segment"
-          />
+          <Flex gap={100} align={"center"} justify={"center"}>
+            <DonutChart
+              h={300}
+              data={ruasData}
+              withTooltip
+              tooltipDataSource="segment"
+            />
+            <Flex direction="column" gap={10}>
+              <Text ta="center">Total Lalin</Text>
+              {ruasData.map((item) => (
+                <Text key={item.name}></Text>
+              ))}
+            </Flex>
+          </Flex>
         </Card>
       </Grid.Col>
     </Grid>

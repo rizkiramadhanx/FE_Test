@@ -1,4 +1,4 @@
-type typeDataDashboard = {
+export type typeDataDashboard = {
   id: number;
   IdCabang: number;
   IdGerbang: number;
@@ -22,32 +22,26 @@ type typeDataDashboard = {
 };
 
 // Chart data types
-type typeBankTraffic = {
+export type typeBankTraffic = {
   name: string;
   value: number;
 };
 
-type typeShiftData = {
-  name: string;
-  value: number;
-  color: string;
-};
-
-type typeGateTraffic = {
-  name: string;
-  value: number;
-};
-
-type typeRuasData = {
+export type typeShiftData = {
   name: string;
   value: number;
   color: string;
 };
 
-export type {
-  typeDataDashboard,
-  typeBankTraffic,
-  typeShiftData,
-  typeGateTraffic,
-  typeRuasData,
+export type typeGateTraffic = {
+  name: string;
+  value: number;
 };
+
+export type typeRuasData = {
+  name: string;
+  value: number;
+  color: string;
+};
+
+// All types are already exported above
