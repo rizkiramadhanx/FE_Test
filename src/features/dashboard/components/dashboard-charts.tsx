@@ -7,7 +7,7 @@ import {
 } from "@/features/dashboard/type";
 import useGetAllGate from "@/features/master-data/gate/hooks/useGetAllGate";
 import { BarChart, DonutChart } from "@mantine/charts";
-import { Card, Flex, Grid, Group, Paper, Text, Title } from "@mantine/core";
+import { Card, Flex, Grid, Text, Title } from "@mantine/core";
 import { useMemo } from "react";
 
 interface DashboardChartsProps {
@@ -66,12 +66,22 @@ export default function DashboardCharts({ data }: DashboardChartsProps) {
       shiftTotals[item.Shift] += total;
     });
 
+    // Calculate total for percentage calculation
+    const grandTotal = Object.values(shiftTotals).reduce(
+      (sum, value) => sum + value,
+      0
+    );
+
     const colors = ["#8884d8", "#82ca9d", "#ffc658"];
-    return Object.entries(shiftTotals).map(([shift, value], index) => ({
-      name: `Shift ${shift}`,
-      value,
-      color: colors[index],
-    }));
+    return Object.entries(shiftTotals).map(([shift, value], index) => {
+      const percentage = grandTotal > 0 ? (value / grandTotal) * 100 : 0;
+      return {
+        name: `Shift ${shift}`,
+        value: value, // Keep original value for chart
+        percentage: Math.round(percentage), // Store percentage separately
+        color: colors[index],
+      };
+    });
   }, [data]);
 
   // Process data for Gate Traffic Bar Chart
@@ -128,14 +138,24 @@ export default function DashboardCharts({ data }: DashboardChartsProps) {
       ruasTotals[item.IdCabang] += total;
     });
 
+    // Calculate total for percentage calculation
+    const grandTotal = Object.values(ruasTotals).reduce(
+      (sum, value) => sum + value,
+      0
+    );
+
     const colors = ["#8884d8", "#82ca9d", "#ffc658"];
     return Object.entries(ruasTotals)
       .sort((a, b) => Number(a[0]) - Number(b[0]))
-      .map(([ruas, value], index) => ({
-        name: `Ruas ${ruas}`,
-        value,
-        color: colors[index % colors.length],
-      }));
+      .map(([ruas, value], index) => {
+        const percentage = grandTotal > 0 ? (value / grandTotal) * 100 : 0;
+        return {
+          name: `Ruas ${ruas}`,
+          value: value, // Keep original value for chart
+          percentage: Math.round(percentage), // Store percentage separately
+          color: colors[index % colors.length],
+        };
+      });
   }, [data]);
 
   return (
@@ -180,13 +200,16 @@ export default function DashboardCharts({ data }: DashboardChartsProps) {
               data={shiftData}
               withTooltip
               tooltipDataSource="segment"
+              tooltipProps={{
+                formatter: (value, name) => [`${value}%`, name],
+              }}
             />
             <Flex direction="column" gap={10}>
               <Text ta="center">Total Lalin</Text>
               <Flex direction="column" gap={10}>
                 {shiftData.map((item) => (
                   <Text key={item.name}>
-                    {item.name}: {item.value}
+                    {item.name}: {item.value} - {item.percentage}%
                   </Text>
                 ))}
               </Flex>
@@ -202,6 +225,7 @@ export default function DashboardCharts({ data }: DashboardChartsProps) {
             Jumlah Lalin
           </Title>
           <BarChart
+            title="Jumlah Lalin"
             h={300}
             data={gateTrafficData}
             dataKey="name"
@@ -224,11 +248,16 @@ export default function DashboardCharts({ data }: DashboardChartsProps) {
               data={ruasData}
               withTooltip
               tooltipDataSource="segment"
+              tooltipProps={{
+                formatter: (value, name) => [`${value}%`, name],
+              }}
             />
             <Flex direction="column" gap={10}>
               <Text ta="center">Total Lalin</Text>
               {ruasData.map((item) => (
-                <Text key={item.name}></Text>
+                <Text key={item.name}>
+                  {item.name}: {item.value} - {item.percentage}%
+                </Text>
               ))}
             </Flex>
           </Flex>

@@ -30,6 +30,7 @@ export type typeBankTraffic = {
 export type typeShiftData = {
   name: string;
   value: number;
+  percentage: number;
   color: string;
 };
 
@@ -41,6 +42,7 @@ export type typeGateTraffic = {
 export type typeRuasData = {
   name: string;
   value: number;
+  percentage: number;
   color: string;
 };
 
