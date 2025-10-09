@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Box,
   Button,
+  Flex,
   PasswordInput,
   Text,
   TextInput,
@@ -15,6 +16,8 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import store from "store2";
 import { z } from "zod";
+import Logo from "@/assets/logo.png";
+import SidebarImage from "@/assets/login-side.jpg";
 
 const schema = z.object({
   username: z.string().min(4, { message: "Username minimal 4 karakter" }),
@@ -57,7 +60,7 @@ export default function Login() {
           color: "green",
         });
 
-        router(ROUTES.MasterData.Gate.View, { replace: true });
+        router(ROUTES.Dashboard.View, { replace: true });
       },
       onError: () => {
         Notifications.show({
@@ -80,22 +83,6 @@ export default function Login() {
         },
       }}
     >
-      {import.meta.env.VITE_PUBLIC_NODE_ENV === "development" && (
-        <Box
-          style={{
-            position: "absolute",
-            top: 0,
-            right: 0,
-            backgroundColor: "red",
-            padding: "4px",
-          }}
-        >
-          <Text style={{ color: "white" }}>Development</Text>
-        </Box>
-      )}
-      {/* Left Section - Optional Branding */}
-
-      {/* Right Section - Login Form */}
       <Box
         sx={(theme) => ({
           flex: 1,
@@ -112,13 +99,14 @@ export default function Login() {
             width: "100%",
             maxWidth: 420,
             padding: "2rem",
+            paddingTop: "0",
             borderRadius: "8px",
             boxShadow: "0 2px 12px rgba(0,0,0,0.1)",
           }}
         >
-          <Text size="xl" fw={700} mb="xs" c="primary.7">
-            Login to {import.meta.env.VITE_PUBLIC_APP_NAME}
-          </Text>
+          <Flex direction="column" gap="xs" align="center" justify="center">
+            <img src={Logo} alt="Logo" style={{ maxHeight: "150px" }} />
+          </Flex>
           <Text mb="xs">Super Admin | password12345</Text>
           <form onSubmit={handleSubmit(onSubmit)}>
             <TextInput
@@ -162,7 +150,7 @@ export default function Login() {
         }}
       >
         <img
-          src="https://picsum.photos/1000/1000"
+          src={SidebarImage}
           style={{
             width: "100%",
             height: "100%",

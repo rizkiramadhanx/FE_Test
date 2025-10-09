@@ -1,6 +1,20 @@
-import { createTheme, virtualColor } from "@mantine/core";
+import { createTheme, MantineColorsTuple } from "@mantine/core";
+
+const primaryColor: MantineColorsTuple = [
+  "#e9f3ff",
+  "#d5e2fc",
+  "#abc2f1",
+  "#7da1e6",
+  "#5784dd",
+  "#4375d9",
+  "#3069d7",
+  "#2158bf",
+  "#174eac",
+  "#014399",
+];
 
 const customTheme = createTheme({
+  cursorType: "pointer",
   components: {
     modalTitle: {
       styles: () => ({
@@ -17,10 +31,10 @@ const customTheme = createTheme({
     Input: {
       styles: () => ({
         input: {
-          borderColor: "orange",
+          borderColor: "primary.5",
 
           "&:focus, &:focus-within": {
-            borderColor: "orange",
+            borderColor: "primary.5",
           },
         },
       }),
@@ -28,46 +42,22 @@ const customTheme = createTheme({
     TextInput: {
       styles: () => ({
         input: {
-          borderColor: "orange",
-
+          borderColor: "primary.5",
           "&:focus, &:focus-within": {
-            borderColor: "orange",
+            borderColor: "primary.5",
           },
+        },
+        error: {
+          color: "red.9", // warna merah yang lebih soft
         },
       }),
     },
   },
+  primaryColor: "primary",
   colors: {
-    orange: [
-      "#fff0e2",
-      "#ffdfcc",
-      "#ffbe9b",
-      "#fd9b66",
-      "#fc8849",
-      "#fb6a1c",
-      "#fc600a",
-      "#e15000",
-      "#c94500",
-      "#af3900",
-    ],
-    green: [
-      "#e0f3e8",
-      "#c0e7d2",
-      "#9edcbb",
-      "#7cd0a3",
-      "#58c58b",
-      "#38b972",
-      "#289350",
-      "#1f6f3c",
-      "#154b28",
-      "#0a2714",
-    ],
-    primary: virtualColor({
-      name: "primary",
-      dark: "orange",
-      light: "orange",
-    }),
+    primary: primaryColor,
   },
   fontFamily: "Inter, sans-serif",
 });
+
 export default customTheme;

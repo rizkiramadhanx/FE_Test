@@ -1,8 +1,21 @@
 import { ROUTES } from "@/enum/routes";
 import { BiUser } from "react-icons/bi";
-import { FaDatabase, FaFileAlt } from "react-icons/fa";
+import { FaDatabase, FaFileAlt, FaTachometerAlt } from "react-icons/fa";
 
 const SidebarMenu = [
+  {
+    title: "Dashboard",
+    icon: <FaTachometerAlt />,
+    path: ROUTES.Dashboard.View,
+    activePath: [ROUTES.Dashboard.View],
+    children: [
+      {
+        title: "Dashboard Lalin",
+        icon: <FaTachometerAlt />,
+        path: ROUTES.Dashboard.View,
+      },
+    ],
+  },
   {
     title: "Master Data",
     icon: <FaDatabase />,

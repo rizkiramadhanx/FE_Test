@@ -2,6 +2,9 @@ export const ROUTES = {
   Authentication: {
     Login: "/login",
   },
+  Dashboard: {
+    View: "/dashboard",
+  },
   MasterData: {
     Gate: {
       View: "/master-data/gate",
@@ -10,11 +13,6 @@ export const ROUTES = {
   Report: {
     Daily: {
       View: "/report/daily",
-    },
-  },
-  Menu: {
-    ChildMenu: {
-      View: "/menu/child-menu",
     },
   },
 };
