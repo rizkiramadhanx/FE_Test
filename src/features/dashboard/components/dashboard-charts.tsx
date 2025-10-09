@@ -15,7 +15,8 @@ interface DashboardChartsProps {
 }
 
 export default function DashboardCharts({ data }: DashboardChartsProps) {
-  const { data: gerbangData } = useGetAllGate({
+  // Get gate data for nama cabang
+  const { data: dataGate } = useGetAllGate({
     keyword: "",
     page: 1,
     limit: 999999,
@@ -109,7 +110,7 @@ export default function DashboardCharts({ data }: DashboardChartsProps) {
       .sort((a, b) => Number(a[0]) - Number(b[0]))
       .map(([gerbang, value]) => ({
         name: `Gerbang ${
-          gerbangData?.data?.data?.rows?.rows?.find(
+          dataGate?.data?.data?.rows?.rows?.find(
             (item: any) => item.id === gerbang
           )?.NamaGerbang
         }`,
@@ -147,16 +148,23 @@ export default function DashboardCharts({ data }: DashboardChartsProps) {
     const colors = ["#8884d8", "#82ca9d", "#ffc658"];
     return Object.entries(ruasTotals)
       .sort((a, b) => Number(a[0]) - Number(b[0]))
-      .map(([ruas, value], index) => {
+      .map(([ruasId, value], index) => {
         const percentage = grandTotal > 0 ? (value / grandTotal) * 100 : 0;
+
+        // Get nama cabang from gate data
+        const namaCabang =
+          dataGate?.data?.data?.rows?.rows?.find(
+            (gate: any) => gate.IdCabang === Number(ruasId)
+          )?.NamaCabang || `Cabang ${ruasId}`;
+
         return {
-          name: `Ruas ${ruas}`,
+          name: namaCabang,
           value: value, // Keep original value for chart
           percentage: Math.round(percentage), // Store percentage separately
           color: colors[index % colors.length],
         };
       });
-  }, [data]);
+  }, [data, dataGate]);
 
   return (
     <Grid>

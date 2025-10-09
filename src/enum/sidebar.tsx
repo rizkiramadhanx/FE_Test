@@ -8,35 +8,21 @@ const SidebarMenu = [
     icon: <FaTachometerAlt />,
     path: ROUTES.Dashboard.View,
     activePath: [ROUTES.Dashboard.View],
-    children: [
-      {
-        title: "Dashboard Lalin",
-        icon: <FaTachometerAlt />,
-        path: ROUTES.Dashboard.View,
-      },
-    ],
   },
   {
-    title: "Master Data",
+    title: "Master Gerbang",
     icon: <FaDatabase />,
     path: ROUTES.MasterData.Gate.View,
     activePath: [ROUTES.MasterData.Gate.View],
-    children: [
-      {
-        title: "Gerbang",
-        icon: <BiUser />,
-        path: ROUTES.MasterData.Gate.View,
-      },
-    ],
   },
   {
-    title: "Laporan",
+    title: "Laporan Lalin",
     icon: <FaFileAlt />,
     path: ROUTES.Report.Daily.View,
     activePath: [ROUTES.Report.Daily.View],
     children: [
       {
-        title: "Laporan Harian",
+        title: "Laporan Lalin Harian",
         icon: <FaFileAlt />,
         path: ROUTES.Report.Daily.View,
       },
