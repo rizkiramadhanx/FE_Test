@@ -32,15 +32,17 @@ export default function PageReportDaily() {
     limit: 999999,
   });
 
-  const {
-    data: dataReport,
-    isLoading: isLoadingReport,
-    isSuccess: isSuccessReport,
-  } = useGetAllReportDaily({
+  const [filter, setFilter] = useState({
     keyword: "",
     page: 1,
     limit: 999999,
   });
+
+  const {
+    data: dataReport,
+    isLoading: isLoadingReport,
+    isSuccess: isSuccessReport,
+  } = useGetAllReportDaily(filter);
 
   // Search is now handled in frontend with searchDataByName function
 
@@ -504,25 +506,7 @@ export default function PageReportDaily() {
           </Table.Tbody>
         </Table>
       </Table.ScrollContainer>
-      <Flex mt={20} justify="space-between" px={20}>
-        {isSuccessReport && (
-          <Select
-            size="sm"
-            w="70px"
-            value={filter.limit.toString()}
-            onChange={(e) => {
-              setFilter((prev) => ({
-                ...prev,
-                limit: Number(e),
-              }));
-            }}
-            data={[
-              { label: "25", value: "25" },
-              { label: "50", value: "50" },
-              { label: "100", value: "100" },
-            ]}
-          />
-        )}
+      <Flex mt={20} justify="flex-end" px={20}>
         {isSuccessReport && dataReport?.data?.data?.total_pages && (
           <Pagination
             color="primary"
