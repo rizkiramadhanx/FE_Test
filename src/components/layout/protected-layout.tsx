@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router";
 
-const protectedPath = ["/master-data"];
+const protectedPath = ["/master-data", "/dashboard", "/report"];
 export default function ProtectedLayout({
   children,
 }: {

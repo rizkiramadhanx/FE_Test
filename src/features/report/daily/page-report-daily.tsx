@@ -378,8 +378,9 @@ export default function PageReportDaily() {
         direction={{ base: "column", md: "row" }}
         gap={10}
         mt={10}
-        sx={{ justifyContent: "flex-start", alignItems: "center" }}
+        sx={{ justifyContent: "space-between", alignItems: "center" }}
       >
+        <Flex gap={10} w={"100%"}>
         <Input
           size="sm"
           leftSection={<CiSearch size={18} />}
@@ -387,28 +388,30 @@ export default function PageReportDaily() {
             const val = e.target.value;
             setInputSearch(val);
           }}
-          placeholder="Cari berdasarkan nama ruas atau gerbang..."
+            placeholder="Cari berdasarkan nama ruas atau gerbang..."
           value={inputSearch}
           w={{ base: "100%", md: "auto" }}
         />
-        <DatePickerInput
-          placeholder="Pick date"
-          valueFormat="DD-MM-YYYY"
-          value={valueDate}
-          onChange={setValueDate}
-          w={{ base: "100%", md: "auto" }}
-        />
-        <Button
-          variant="filled"
-          color="red"
-          onClick={() => {
-            setValueDate(null);
-            setInputSearch("");
-            setPaymentFilter("all");
-          }}
-        >
-          Reset
-        </Button>
+          <DatePickerInput
+            placeholder="Pick date"
+            valueFormat="DD-MM-YYYY"
+            value={valueDate}
+            onChange={setValueDate}
+            w={{ base: "100%", md: "auto" }}
+          />
+          <Button
+            variant="filled"
+            color="red"
+            onClick={() => {
+              setValueDate(null);
+              setInputSearch("");
+              setPaymentFilter("all");
+            }}
+          >
+            Reset
+          </Button>
+        </Flex>
+
         <Button
           variant="filled"
           color="green"
@@ -476,37 +479,37 @@ export default function PageReportDaily() {
                   )
                 )
               ).map((group: any, index: number) => {
-                return (
+                  return (
                   <Table.Tr key={`${group.IdCabang}-${group.IdGerbang}`}>
                     <Table.Td>{index + 1}</Table.Td>
-                    <Table.Td>
+                      <Table.Td>
                       {dataGate?.data?.data?.rows?.rows?.find(
                         (item: typeDataGate) => item.IdCabang === group.IdCabang
                       )?.NamaCabang || "-"}
-                    </Table.Td>
-                    <Table.Td>
+                      </Table.Td>
+                      <Table.Td>
                       {dataGate?.data?.data?.rows?.rows?.find(
                         (item: typeDataGate) =>
                           item.IdCabang === group.IdCabang &&
                           item.id === group.IdGerbang
                       )?.NamaGerbang || "-"}
-                    </Table.Td>
+                      </Table.Td>
                     <Table.Td>{group.data[0]?.IdGardu || "-"}</Table.Td>
                     <Table.Td>{day(group.Tanggal).format("dddd")}</Table.Td>
-                    <Table.Td>
+                      <Table.Td>
                       {day(group.Tanggal).format("DD-MM-YYYY")}
-                    </Table.Td>
+                      </Table.Td>
                     <Table.Td>{getPaymentMethods(group.data)}</Table.Td>
                     <Table.Td>{formatNumber(group.totals.gol1)}</Table.Td>
                     <Table.Td>{formatNumber(group.totals.gol2)}</Table.Td>
                     <Table.Td>{formatNumber(group.totals.gol3)}</Table.Td>
                     <Table.Td>{formatNumber(group.totals.gol4)}</Table.Td>
                     <Table.Td>{formatNumber(group.totals.gol5)}</Table.Td>
-                    <Table.Td>
+                      <Table.Td>
                       <Text fw={600}>{formatNumber(group.totals.total)}</Text>
-                    </Table.Td>
-                  </Table.Tr>
-                );
+                      </Table.Td>
+                    </Table.Tr>
+                  );
               })}
             {isSuccessReport &&
               (!dataReport?.data?.data?.rows?.rows ||
@@ -652,7 +655,7 @@ export default function PageReportDaily() {
                     );
                   })()}
                 </>
-              )}
+            )}
           </Table.Tbody>
         </Table>
       </Table.ScrollContainer>

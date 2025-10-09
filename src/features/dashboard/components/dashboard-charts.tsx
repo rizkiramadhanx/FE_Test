@@ -16,7 +16,7 @@ interface DashboardChartsProps {
 
 export default function DashboardCharts({ data }: DashboardChartsProps) {
   // Get gate data for nama cabang
-  const { data: dataGate } = useGetAllGate({
+  const { data: dataGate, isSuccess: isSuccessGate } = useGetAllGate({
     keyword: "",
     page: 1,
     limit: 999999,
@@ -110,9 +110,9 @@ export default function DashboardCharts({ data }: DashboardChartsProps) {
       .sort((a, b) => Number(a[0]) - Number(b[0]))
       .map(([gerbang, value]) => ({
         name: `Gerbang ${
-          dataGate?.data?.data?.rows?.rows?.find(
-            (item: any) => item.id === gerbang
-          )?.NamaGerbang
+          dataGate?.data?.data?.rows?.rows.find(
+            (item: any) => Number(item.id) === Number(gerbang)
+          ).NamaGerbang
         }`,
         value,
       }));
@@ -232,16 +232,18 @@ export default function DashboardCharts({ data }: DashboardChartsProps) {
           <Title order={3} mb="md">
             Jumlah Lalin
           </Title>
-          <BarChart
-            title="Jumlah Lalin"
-            h={300}
-            data={gateTrafficData}
-            dataKey="name"
-            series={[{ name: "value", color: "primary.6" }]}
-            color="primary.6"
-            tickLine="xy"
-            gridAxis="xy"
-          />
+          {isSuccessGate && (
+            <BarChart
+              title="Jumlah Lalin"
+              h={300}
+              data={gateTrafficData}
+              dataKey="name"
+              series={[{ name: "value", color: "primary.6" }]}
+              color="primary.6"
+              tickLine="xy"
+              gridAxis="xy"
+            />
+          )}
         </Card>
       </Grid.Col>
 

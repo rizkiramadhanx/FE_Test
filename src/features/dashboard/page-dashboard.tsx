@@ -40,10 +40,6 @@ export default function PageDashboard() {
   // Filter data by selected date
   const filteredData = filterDataByDate(processedData, selectedDate || "");
 
-  const handleFilter = () => {
-    // Data will automatically refetch due to queryKey dependency on selectedDate
-  };
-
   return (
     <Paper p={20} radius="md">
       {/* Header */}
@@ -60,9 +56,7 @@ export default function PageDashboard() {
           onChange={setSelectedDate}
           w={200}
         />
-        <Button onClick={handleFilter} variant="filled">
-          Filter
-        </Button>
+
         <Button variant="outline" onClick={() => setSelectedDate(null)}>
           Reset
         </Button>

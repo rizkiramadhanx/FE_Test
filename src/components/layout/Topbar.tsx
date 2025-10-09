@@ -1,17 +1,18 @@
+import Logo from "@/assets/jasa-marga.jpg";
 import useNavigationStore from "@/store/navigation";
 import useUserStore from "@/store/user";
 import {
   Box,
   Button,
+  Flex,
   Popover,
   Switch,
-  Text,
   useMantineColorScheme,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { AiOutlineMenuFold, AiOutlineMenuUnfold } from "react-icons/ai";
-import store from "store2";
 import { IoMoonSharp, IoSunnyOutline } from "react-icons/io5";
+import store from "store2";
 
 export default function Topbar() {
   const { toggleSidebar, isSidebarOpen, toggleSidebarMobile } =
@@ -47,14 +48,9 @@ export default function Topbar() {
       }}
     >
       <Box display="flex" sx={{ gap: 10, alignItems: "center" }}>
-        <Box w={220} display={{ base: "none", md: "flex" }} sx={{ gap: 5 }}>
-          <Text fw={800} c="orange" size="lg">
-            Jasa
-          </Text>
-          <Text fw={600} c="green" size="lg">
-            Marga
-          </Text>
-        </Box>
+        <Flex w={220} justify={"center"}>
+          <img src={Logo} alt="Logo" height={50} />
+        </Flex>
         <Box
           onClick={isMobile ? toggleSidebarMobile : toggleSidebar}
           style={{ cursor: "pointer" }}
