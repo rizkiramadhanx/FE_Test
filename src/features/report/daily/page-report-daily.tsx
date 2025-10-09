@@ -10,7 +10,6 @@ import {
   Group,
   Input,
   Pagination,
-  Select,
   Table,
   Text,
 } from "@mantine/core";
@@ -19,6 +18,8 @@ import { CiSearch } from "react-icons/ci";
 import { TiArrowBack } from "react-icons/ti";
 import { useNavigate } from "react-router";
 import { DatePickerInput } from "@mantine/dates";
+import * as XLSX from "xlsx";
+import { FaFileExcel } from "react-icons/fa";
 
 export default function PageReportDaily() {
   const navigate = useNavigate();
@@ -219,6 +220,142 @@ export default function PageReportDaily() {
     return Object.values(grouped);
   };
 
+  // Function to export data to Excel
+  const handleExportExcel = () => {
+    // Get current filtered and grouped data
+    const currentData = groupDataByCabangAndGerbang(
+      searchDataByName(
+        filterDataByDate(
+          filterDataByPaymentMethod(dataReport?.data?.data?.rows?.rows || [])
+        )
+      )
+    );
+
+    // Prepare data for Excel
+    const excelData: any[] = [];
+
+    currentData.forEach((group) => {
+      const namaCabang =
+        dataGate?.data?.data?.rows?.rows?.find(
+          (gate: typeDataGate) => gate.IdCabang === group.IdCabang
+        )?.NamaCabang || `Cabang ${group.IdCabang}`;
+
+      const namaGerbang =
+        dataGate?.data?.data?.rows?.rows?.find(
+          (gate: typeDataGate) =>
+            gate.IdCabang === group.IdCabang && gate.id === group.IdGerbang
+        )?.NamaGerbang || `Gerbang ${group.IdGerbang}`;
+
+      // Add group header row
+      excelData.push({
+        "Ruas/Cabang": namaCabang,
+        Gerbang: namaGerbang,
+        Gardu: group.data[0]?.IdGardu || "-",
+        Tanggal: group.data[0]?.Tanggal
+          ? new Date(group.data[0].Tanggal).toLocaleDateString("id-ID")
+          : "-",
+        "Metode Pembayaran": getPaymentMethods(group.data),
+        "Gol 1": formatNumber(group.totals.gol1),
+        "Gol 2": formatNumber(group.totals.gol2),
+        "Gol 3": formatNumber(group.totals.gol3),
+        "Gol 4": formatNumber(group.totals.gol4),
+        "Gol 5": formatNumber(group.totals.gol5),
+        "Total Lalin": formatNumber(group.totals.total),
+      });
+    });
+
+    // Calculate totals per cabang and grand totals
+    const cabangTotals: { [key: number]: any } = {};
+    const grandTotals = {
+      gol1: 0,
+      gol2: 0,
+      gol3: 0,
+      gol4: 0,
+      gol5: 0,
+      total: 0,
+    };
+
+    currentData.forEach((group) => {
+      const cabangId = group.IdCabang;
+
+      if (!cabangTotals[cabangId]) {
+        cabangTotals[cabangId] = {
+          IdCabang: cabangId,
+          totals: {
+            gol1: 0,
+            gol2: 0,
+            gol3: 0,
+            gol4: 0,
+            gol5: 0,
+            total: 0,
+          },
+        };
+      }
+
+      cabangTotals[cabangId].totals.gol1 += group.totals.gol1;
+      cabangTotals[cabangId].totals.gol2 += group.totals.gol2;
+      cabangTotals[cabangId].totals.gol3 += group.totals.gol3;
+      cabangTotals[cabangId].totals.gol4 += group.totals.gol4;
+      cabangTotals[cabangId].totals.gol5 += group.totals.gol5;
+      cabangTotals[cabangId].totals.total += group.totals.total;
+
+      grandTotals.gol1 += group.totals.gol1;
+      grandTotals.gol2 += group.totals.gol2;
+      grandTotals.gol3 += group.totals.gol3;
+      grandTotals.gol4 += group.totals.gol4;
+      grandTotals.gol5 += group.totals.gol5;
+      grandTotals.total += group.totals.total;
+    });
+
+    // Add summary rows
+    Object.values(cabangTotals).forEach((cabang: any) => {
+      const namaCabang =
+        dataGate?.data?.data?.rows?.rows?.find(
+          (gate: any) => gate.IdCabang === cabang.IdCabang
+        )?.NamaCabang || `Cabang ${cabang.IdCabang}`;
+
+      excelData.push({
+        "Ruas/Cabang": `Total Lalin ${namaCabang}`,
+        Gerbang: "",
+        Gardu: "",
+        Tanggal: "",
+        "Metode Pembayaran": "",
+        "Gol 1": formatNumber(cabang.totals.gol1),
+        "Gol 2": formatNumber(cabang.totals.gol2),
+        "Gol 3": formatNumber(cabang.totals.gol3),
+        "Gol 4": formatNumber(cabang.totals.gol4),
+        "Gol 5": formatNumber(cabang.totals.gol5),
+        "Total Lalin": formatNumber(cabang.totals.total),
+      });
+    });
+
+    // Add grand total row
+    excelData.push({
+      "Ruas/Cabang": "Total Lalin Keseluruhan",
+      Gerbang: "",
+      Gardu: "",
+      Tanggal: "",
+      "Metode Pembayaran": "",
+      "Gol 1": formatNumber(grandTotals.gol1),
+      "Gol 2": formatNumber(grandTotals.gol2),
+      "Gol 3": formatNumber(grandTotals.gol3),
+      "Gol 4": formatNumber(grandTotals.gol4),
+      "Gol 5": formatNumber(grandTotals.gol5),
+      "Total Lalin": formatNumber(grandTotals.total),
+    });
+
+    // Create workbook and worksheet
+    const worksheet = XLSX.utils.json_to_sheet(excelData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Laporan Harian");
+
+    // Generate filename with current date
+    const fileName = `Laporan_Harian_${day().format("YYYY-MM-DD_HHmmss")}.xlsx`;
+
+    // Download file
+    XLSX.writeFile(workbook, fileName);
+  };
+
   const [valueDate, setValueDate] = useState<string | null>(
     day("01-11-2023").format("DD-MM-YYYY")
   );
@@ -271,6 +408,19 @@ export default function PageReportDaily() {
           }}
         >
           Reset
+        </Button>
+        <Button
+          variant="filled"
+          color="green"
+          leftSection={<FaFileExcel size={18} />}
+          onClick={handleExportExcel}
+          disabled={
+            isLoadingReport ||
+            !dataReport?.data?.data?.rows?.rows ||
+            dataReport.data.data.rows.rows.length === 0
+          }
+        >
+          Export Excel
         </Button>
       </Flex>
       {/* Payment Method Filter Buttons */}

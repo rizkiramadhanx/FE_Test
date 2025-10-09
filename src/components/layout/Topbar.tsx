@@ -49,10 +49,10 @@ export default function Topbar() {
       <Box display="flex" sx={{ gap: 10, alignItems: "center" }}>
         <Box w={220} display={{ base: "none", md: "flex" }} sx={{ gap: 5 }}>
           <Text fw={800} c="orange" size="lg">
-            Boilerplate
+            Jasa
           </Text>
           <Text fw={600} c="green" size="lg">
-            Mantine
+            Marga
           </Text>
         </Box>
         <Box
