@@ -32,17 +32,15 @@ export default function PageReportDaily() {
     limit: 999999,
   });
 
-  const [filter, setFilter] = useState({
-    keyword: "",
-    page: 1,
-    limit: 999999,
-  });
-
   const {
     data: dataReport,
     isLoading: isLoadingReport,
     isSuccess: isSuccessReport,
-  } = useGetAllReportDaily(filter);
+  } = useGetAllReportDaily({
+    keyword: "",
+    page: 1,
+    limit: 999999,
+  });
 
   // Search is now handled in frontend with searchDataByName function
 
@@ -304,6 +302,7 @@ export default function PageReportDaily() {
               <Table.Th>No.</Table.Th>
               <Table.Th>Ruas</Table.Th>
               <Table.Th>Gerbang</Table.Th>
+              <Table.Th>Gardu</Table.Th>
               <Table.Th>Hari</Table.Th>
               <Table.Th>Tanggal</Table.Th>
               <Table.Th>Metode Pembayaran</Table.Th>
@@ -340,6 +339,7 @@ export default function PageReportDaily() {
                           item.id === group.IdGerbang
                       )?.NamaGerbang || "-"}
                     </Table.Td>
+                    <Table.Td>{group.data[0]?.IdGardu || "-"}</Table.Td>
                     <Table.Td>{day(group.Tanggal).format("dddd")}</Table.Td>
                     <Table.Td>
                       {day(group.Tanggal).format("DD-MM-YYYY")}
@@ -360,18 +360,147 @@ export default function PageReportDaily() {
               (!dataReport?.data?.data?.rows?.rows ||
                 dataReport.data.data.rows.rows.length === 0) && (
                 <Table.Tr>
-                  <Table.Td colSpan={12} align="center" height={50}>
+                  <Table.Td colSpan={13} align="center" height={50}>
                     Tidak ada data ditemukan
                   </Table.Td>
                 </Table.Tr>
               )}
             {isLoadingReport && (
               <Table.Tr>
-                <Table.Td colSpan={12} align="center" height={50}>
+                <Table.Td colSpan={13} align="center" height={50}>
                   Memuat...
                 </Table.Td>
               </Table.Tr>
             )}
+
+            {/* Summary Rows */}
+            {isSuccessReport &&
+              dataReport?.data?.data?.rows?.rows?.length > 0 && (
+                <>
+                  {(() => {
+                    const groupedData = groupDataByCabangAndGerbang(
+                      searchDataByName(
+                        filterDataByDate(
+                          filterDataByPaymentMethod(
+                            dataReport.data.data.rows.rows
+                          )
+                        )
+                      )
+                    );
+
+                    // Calculate totals per cabang
+                    const cabangTotals: { [key: number]: any } = {};
+                    const grandTotals = {
+                      gol1: 0,
+                      gol2: 0,
+                      gol3: 0,
+                      gol4: 0,
+                      gol5: 0,
+                      total: 0,
+                    };
+
+                    groupedData.forEach((group) => {
+                      const cabangId = group.IdCabang;
+
+                      if (!cabangTotals[cabangId]) {
+                        cabangTotals[cabangId] = {
+                          IdCabang: cabangId,
+                          totals: {
+                            gol1: 0,
+                            gol2: 0,
+                            gol3: 0,
+                            gol4: 0,
+                            gol5: 0,
+                            total: 0,
+                          },
+                        };
+                      }
+
+                      // Add to cabang totals
+                      cabangTotals[cabangId].totals.gol1 += group.totals.gol1;
+                      cabangTotals[cabangId].totals.gol2 += group.totals.gol2;
+                      cabangTotals[cabangId].totals.gol3 += group.totals.gol3;
+                      cabangTotals[cabangId].totals.gol4 += group.totals.gol4;
+                      cabangTotals[cabangId].totals.gol5 += group.totals.gol5;
+                      cabangTotals[cabangId].totals.total += group.totals.total;
+
+                      // Add to grand totals
+                      grandTotals.gol1 += group.totals.gol1;
+                      grandTotals.gol2 += group.totals.gol2;
+                      grandTotals.gol3 += group.totals.gol3;
+                      grandTotals.gol4 += group.totals.gol4;
+                      grandTotals.gol5 += group.totals.gol5;
+                      grandTotals.total += group.totals.total;
+                    });
+
+                    return (
+                      <>
+                        {/* Summary rows for each cabang */}
+                        {Object.values(cabangTotals).map((cabang: any) => {
+                          const namaCabang =
+                            dataGate?.data?.data?.rows?.rows?.find(
+                              (gate: any) => gate.IdCabang === cabang.IdCabang
+                            )?.NamaCabang || `Cabang ${cabang.IdCabang}`;
+
+                          return (
+                            <Table.Tr
+                              key={`cabang-${cabang.IdCabang}`}
+                              bg="gray.1"
+                            >
+                              <Table.Td colSpan={7} fw={600}>
+                                Total Lalin {namaCabang}
+                              </Table.Td>
+                              <Table.Td>
+                                {formatNumber(cabang.totals.gol1)}
+                              </Table.Td>
+                              <Table.Td>
+                                {formatNumber(cabang.totals.gol2)}
+                              </Table.Td>
+                              <Table.Td>
+                                {formatNumber(cabang.totals.gol3)}
+                              </Table.Td>
+                              <Table.Td>
+                                {formatNumber(cabang.totals.gol4)}
+                              </Table.Td>
+                              <Table.Td>
+                                {formatNumber(cabang.totals.gol5)}
+                              </Table.Td>
+                              <Table.Td fw={600}>
+                                {formatNumber(cabang.totals.total)}
+                              </Table.Td>
+                            </Table.Tr>
+                          );
+                        })}
+
+                        {/* Grand total row */}
+                        <Table.Tr bg="gray.3">
+                          <Table.Td colSpan={7} fw={600}>
+                            Total Lalin Keseluruhan
+                          </Table.Td>
+                          <Table.Td fw={600}>
+                            {formatNumber(grandTotals.gol1)}
+                          </Table.Td>
+                          <Table.Td fw={600}>
+                            {formatNumber(grandTotals.gol2)}
+                          </Table.Td>
+                          <Table.Td fw={600}>
+                            {formatNumber(grandTotals.gol3)}
+                          </Table.Td>
+                          <Table.Td fw={600}>
+                            {formatNumber(grandTotals.gol4)}
+                          </Table.Td>
+                          <Table.Td fw={600}>
+                            {formatNumber(grandTotals.gol5)}
+                          </Table.Td>
+                          <Table.Td fw={600}>
+                            {formatNumber(grandTotals.total)}
+                          </Table.Td>
+                        </Table.Tr>
+                      </>
+                    );
+                  })()}
+                </>
+              )}
           </Table.Tbody>
         </Table>
       </Table.ScrollContainer>
